@@ -29,10 +29,25 @@ app.use((req, res) => {
     res.status(404).end();
   });
 
-  db.query(`SELECT * FROM candidates`, (err, rows) => {
-    console.log(rows);
+//   db.query(`SELECT * FROM candidates`, (err, rows) => {
+//     console.log(rows);
+//   });
+
+// GET a single candidate
+db.query(`SELECT * FROM candidates WHERE id = 1`, (err, row) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log(row);
   });
   
+  // Delete a candidate
+db.query(`DELETE FROM candidates WHERE id = ?`, 1, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log(result);
+  });
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
