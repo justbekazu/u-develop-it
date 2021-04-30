@@ -18,7 +18,9 @@ app.use(express.json());
        user: 'root',
        // Your MySQL password
        password: 'alexander0718',
-       database: 'election'
+       database: 'election',
+
+
     },
      console.log('Connected to the election database.')
    );
