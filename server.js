@@ -86,28 +86,6 @@ app.get('/api/candidate/:id', (req, res) => {
   });
   
 
-  // Delete a candidate
-app.delete('/api/candidate/:id', (req, res) => {
-    const sql = `DELETE FROM candidates WHERE id = ?`;
-    const params = [req.params.id];
-  
-    db.query(sql, params, (err, result) => {
-      if (err) {
-        res.statusMessage(400).json({ error: res.message });
-      } else if (!result.affectedRows) {
-        res.json({
-          message: 'Candidate not found'
-        });
-      } else {
-        res.json({
-          message: 'deleted',
-          changes: result.affectedRows,
-          id: req.params.id
-        });
-      }
-    });
-  })
-
   // Create a candidate
 app.post('/api/candidate', ({ body }, res) => {
     const errors = inputCheck(
@@ -168,6 +146,29 @@ if (errors) {
   });
 });
 
+  // Delete a candidate
+  app.delete('/api/candidate/:id', (req, res) => {
+    const sql = `DELETE FROM candidates WHERE id = ?`;
+    const params = [req.params.id];
+  
+    db.query(sql, params, (err, result) => {
+      if (err) {
+        res.statusMessage(400).json({ error: res.message });
+      } else if (!result.affectedRows) {
+        res.json({
+          message: 'Candidate not found'
+        });
+      } else {
+        res.json({
+          message: 'deleted',
+          changes: result.affectedRows,
+          id: req.params.id
+        });
+      }
+    });
+  })
+
+//get all parties
 app.get('/api/parties', (req, res) => {
   const sql = `SELECT * FROM parties`;
   db.query(sql, (err, rows) => {
@@ -185,6 +186,7 @@ app.get('/api/parties', (req, res) => {
 app.get('/api/party/:id', (req, res) => {
   const sql = `SELECT * FROM parties WHERE id = ?`;
   const params = [req.params.id];
+
   db.query(sql, params, (err, row) => {
     if (err) {
       res.status(400).json({ error: err.message });
@@ -243,7 +245,11 @@ app.use((req, res) => {
     res.status(404).end();
   });
 
-
+  // Start server after DB connection
+db.connect(err => {
+  if (err) throw err;
+  console.log('Database connected.');
+});
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
